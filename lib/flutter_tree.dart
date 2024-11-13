@@ -165,6 +165,7 @@ class _FlutterTreeProState extends State<FlutterTreePro> {
               break;
             }
           }
+
           selectCheckedBox(item, initial: true);
         }
       }
@@ -206,7 +207,10 @@ class _FlutterTreeProState extends State<FlutterTreePro> {
         GestureDetector(
           onTap: () => onOpenNode(sourceTreeMap),
           child: Container(
-            width: MediaQuery.of(context).size.width,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width,
             padding: EdgeInsets.only(
               left: 20,
               top: 15,
@@ -215,20 +219,20 @@ class _FlutterTreeProState extends State<FlutterTreePro> {
               children: [
                 Row(
                   textDirection:
-                      widget.isRTL ? TextDirection.rtl : TextDirection.ltr,
+                  widget.isRTL ? TextDirection.rtl : TextDirection.ltr,
                   children: [
                     (sourceTreeMap[widget.config.children] ?? []).isNotEmpty
                         ? Icon(
-                            (sourceTreeMap['open'] ?? false)
-                                ? Icons.keyboard_arrow_down_rounded
-                                : (widget.isRTL
-                                    ? Icons.keyboard_arrow_left_rounded
-                                    : Icons.keyboard_arrow_right_rounded),
-                            size: 20,
-                          )
+                      (sourceTreeMap['open'] ?? false)
+                          ? Icons.keyboard_arrow_down_rounded
+                          : (widget.isRTL
+                          ? Icons.keyboard_arrow_left_rounded
+                          : Icons.keyboard_arrow_right_rounded),
+                      size: 20,
+                    )
                         : SizedBox(
-                            width: widget.isRTL ? 30 : 0,
-                          ),
+                      width: widget.isRTL ? 30 : 0,
+                    ),
                     SizedBox(
                       width: 5,
                     ),
@@ -244,7 +248,7 @@ class _FlutterTreeProState extends State<FlutterTreePro> {
                     Expanded(
                       child: Text(
                         textAlign:
-                            widget.isRTL ? TextAlign.end : TextAlign.start,
+                        widget.isRTL ? TextAlign.end : TextAlign.start,
                         '${sourceTreeMap[widget.config.label]}',
                         style: TextStyle(fontSize: 16),
                       ),
@@ -253,9 +257,9 @@ class _FlutterTreeProState extends State<FlutterTreePro> {
                 ),
                 (sourceTreeMap['open'] ?? false)
                     ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: buildTreeNode(sourceTreeMap),
-                      )
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: buildTreeNode(sourceTreeMap),
+                )
                     : SizedBox.shrink(),
               ],
             ),
@@ -269,11 +273,11 @@ class _FlutterTreeProState extends State<FlutterTreePro> {
   /// @desc render item
   buildTreeNode(Map<String, dynamic> data) {
     return (data[widget.config.children] ?? []).map<Widget>(
-      (e) {
+          (e) {
         return GestureDetector(
           onTap: () => onOpenNode(e),
           child: Container(
-            color: Colors.white,
+            color: Colors.grey.shade50,
             // width: MediaQuery.of(context).size.width,
             padding: EdgeInsets.only(left: 20, top: 15),
             child: Column(
@@ -282,23 +286,23 @@ class _FlutterTreeProState extends State<FlutterTreePro> {
               children: [
                 Row(
                   textDirection:
-                      widget.isRTL ? TextDirection.rtl : TextDirection.ltr,
+                  widget.isRTL ? TextDirection.rtl : TextDirection.ltr,
                   children: [
                     SizedBox(
                       width: widget.isRTL ? 20 : 0,
                     ),
                     (e[widget.config.children] ?? []).isNotEmpty
                         ? Icon(
-                            (e['open'] ?? false)
-                                ? Icons.keyboard_arrow_down_rounded
-                                : (widget.isRTL
-                                    ? Icons.keyboard_arrow_left_rounded
-                                    : Icons.keyboard_arrow_right_rounded),
-                            size: 20,
-                          )
+                      (e['open'] ?? false)
+                          ? Icons.keyboard_arrow_down_rounded
+                          : (widget.isRTL
+                          ? Icons.keyboard_arrow_left_rounded
+                          : Icons.keyboard_arrow_right_rounded),
+                      size: 20,
+                    )
                         : SizedBox(
-                            width: widget.isRTL ? 30 : 10,
-                          ),
+                      width: widget.isRTL ? 30 : 10,
+                    ),
                     SizedBox(
                       width: 5,
                     ),
@@ -315,7 +319,7 @@ class _FlutterTreeProState extends State<FlutterTreePro> {
                       child: Text(
                         '${e[widget.config.label]}',
                         textAlign:
-                            widget.isRTL ? TextAlign.end : TextAlign.start,
+                        widget.isRTL ? TextAlign.end : TextAlign.start,
                         style: TextStyle(fontSize: 16),
                       ),
                     ),
@@ -323,9 +327,9 @@ class _FlutterTreeProState extends State<FlutterTreePro> {
                 ),
                 (e['open'] ?? false)
                     ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: buildTreeNode(e),
-                      )
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: buildTreeNode(e),
+                )
                     : SizedBox.shrink(),
               ],
             ),
@@ -407,10 +411,12 @@ class _FlutterTreeProState extends State<FlutterTreePro> {
 
   void _handleSingleSelect(Map<String, dynamic> dataModel, bool initial) {
     // 设置单选
-    currentSelectId = dataModel['id'];
-    if (!initial) {
-      widget.onChecked([dataModel]);
-    }
+    setState(() {
+      currentSelectId = dataModel['id'];
+      if (!initial) {
+        widget.onChecked([dataModel]);
+      }
+    });
   }
 
   void _handleMultiSelect(Map<String, dynamic> dataModel, bool initial) {
@@ -478,10 +484,17 @@ class _FlutterTreeProState extends State<FlutterTreePro> {
       for (var item in (node[widget.config.children] ?? [])) {
         stack.push(item);
       }
-      if (node['checked'] == 2 &&
-          (node[widget.config.children] ?? []).isEmpty) {
+
+      ///保留父子组件
+      if (node['checked'] == 2 || node['checked'] == 1) {
         checkedList.add(node);
       }
+
+      ///只保留子组件
+      // if (node['checked'] == 2 &&
+      //     (node[widget.config.children] ?? []).isEmpty) {
+      //   checkedList.add(node);
+      // }
     }
     // List中多余的元素
     var list1 = [];
@@ -497,7 +510,8 @@ class _FlutterTreeProState extends State<FlutterTreePro> {
 
     // 移除List中多余的元素
     var set = Set.from(checkedList);
-    var set2 = Set.from(list1);
+    var set2 = Set.from([]);
+    // var set2 = Set.from(list1);
     List<Map<String, dynamic>> filterList = List.from(set.difference(set2));
 
     // if (!initial) {
@@ -545,7 +559,7 @@ class _FlutterTreeProState extends State<FlutterTreePro> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: Colors.grey.shade50,
       child: SingleChildScrollView(
         child: Column(
           children: sourceTreeMapList.map<Widget>((e) {
