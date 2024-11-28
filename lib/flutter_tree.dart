@@ -428,7 +428,8 @@ class _FlutterTreeProState extends State<FlutterTreePro> {
     _toggleCheckState(dataModel, checked);
 
     // 更新父节点
-    if (dataModel[widget.config.parentId]! > 0) {
+    if (((dataModel[widget.config.parentId] is int) ? dataModel[widget.config
+        .parentId] : int.parse(dataModel[widget.config.parentId]))! > 0) {
       updateParentNode(dataModel);
     }
     setState(() {
