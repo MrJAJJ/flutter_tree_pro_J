@@ -351,10 +351,13 @@ class _FlutterTreeProState extends State<FlutterTreePro> {
 
   Icon _buildSingleSelectIcon(Map<String, dynamic> e) {
     return Icon(
-      currentSelectId == e['id']
+      currentSelectId == ((e['id'] is int) ? e['id'] : int.parse(e['id']))
           ? Icons.check_box
           : Icons.check_box_outline_blank,
-      color: currentSelectId == e['id'] ? Color(0X990000FF) : Color(0XFFCCCCCC),
+      color: currentSelectId ==
+          ((e['id'] is int) ? e['id'] : int.parse(e['id']))
+          ? Color(0X990000FF)
+          : Color(0XFFCCCCCC),
     );
   }
 
@@ -412,7 +415,8 @@ class _FlutterTreeProState extends State<FlutterTreePro> {
   void _handleSingleSelect(Map<String, dynamic> dataModel, bool initial) {
     // 设置单选
     setState(() {
-      currentSelectId = dataModel['id'];
+      currentSelectId =
+      (dataModel['id'] is int) ? dataModel['id'] : int.parse(dataModel['id']);
       if (!initial) {
         widget.onChecked([dataModel]);
       }

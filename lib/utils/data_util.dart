@@ -41,14 +41,15 @@ class DataUtil {
 
     // 首先将数据映射到一个 Map 中，键为 id，值为对应的数据项
     for (Map<String, dynamic> item in data) {
-      idMap[item['id']] = item;
+      idMap[(item['id'] is int) ? item['id'] : int.parse(item['id'])] = item;
     }
 
     List<Map<String, dynamic>> result = [];
 
     // 遍历每个数据项
     for (Map<String, dynamic> item in data) {
-      int parentId = item['parentId'];
+      int parentId = (item['parentId'] is int) ? item['parentId'] : int.parse(
+          item['parentId']);
 
       // 如果当前项的父级 ID 不存在于数据中，则它是根节点
       if (!idMap.containsKey(parentId)) {
